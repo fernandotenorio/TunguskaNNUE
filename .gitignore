@@ -38,6 +38,8 @@ torch/*
 !torch/*.py
 
 # cpp
-NNUE/
+NNUE/*
 !NNUE/includes
 !NNUE/src
+
+.vs/
