@@ -34,7 +34,7 @@
 # Data
 bin/
 raw_data/
-torch/
+torch/*
 !torch/*.py
 
 # cpp
