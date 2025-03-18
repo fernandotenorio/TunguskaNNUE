@@ -35,7 +35,7 @@ void Search::initHeuristics(){
 }
 
 Search::Search() : model(NNUELoader::getInstance()) {
-	model.loadWeights("D:\\cpp_projs\\NNUE\\NNUE\\weights\\weights_full_256_e5.npz");
+	model.loadWeights("D:\\cpp_projs\\NNUE\\NNUE\\weights\\weights_2_128.npz");
 }
 
 void Search::refreshNNUE(){
@@ -135,7 +135,9 @@ void Search::clearSearch(){
 	info.nodes = 0;
 	info.fh = 0.0f;
 	info.fhf = 0.0f;
+	info.nullCut = 0;
 }
+
 
 int Search::search(bool verbose){
 	int bestMove = Move::NO_MOVE;
@@ -159,9 +161,8 @@ int Search::search(bool verbose){
 		bestMove = board.pvArray[0];
 		
 		if (verbose){
-			printf("info score cp %d depth %d nodes %llu time %llu ",
-					bestScore, currentDepth, info.nodes, Search::getTime() - info.startTime);
-			printf("pv");
+			printf("info score cp %d depth %d nodes %llu time %llu pv",
+					bestScore, currentDepth, info.nodes, Search::getTime() - info.startTime);			
 			
 			for (int i = 0; i < pvMoves; i++){
 				int m = board.pvArray[i];
@@ -170,10 +171,9 @@ int Search::search(bool verbose){
 			printf("\n");
 		}
 		
-		// printf("Hits: %d  Overwrite: %d  NewWrite: %d  Cut: %d\nOrdering: %.2f  NullCut:%d\n",
-		// 	board.hashTable->hit, board.hashTable->overWrite, board.hashTable->newWrite, board.hashTable->cut,
-		// 	(info.fhf/info.fh)*100, info.nullCut);
-		
+		/*printf("Hits: %d  Overwrite: %d  NewWrite: %d  Cut: %d\nOrdering: %.2f  NullCut:%d\n",
+		 	board.hashTable->hit, board.hashTable->overWrite, board.hashTable->newWrite, board.hashTable->cut,
+		 	(info.fhf/info.fh)*100, info.nullCut);	*/	
 	}
 
 	if (verbose)
@@ -309,8 +309,9 @@ int Search::alphaBeta(int alpha, int beta, int depth, bool doNull) {
 			if (score > ISMATE) score -= board.ply;
 			else if (score < -ISMATE) score += board.ply;
 
-			if (score >= beta) {
-				return beta; // Null move cutoff
+			if (score >= beta) {		
+				info.nullCut++;
+				return score;
 			}
 		}
 	}

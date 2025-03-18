@@ -10,6 +10,33 @@
 #include "Engine/defs.h"
 #include "Constants.h"
 
+struct StartingFeatures {
+    int white_feats_cnt;
+    int black_feats_cnt;
+    std::vector<int> white_feats_idx;
+    std::vector<int> black_feats_idx;
+
+    StartingFeatures() : 
+        white_feats_cnt(0),
+        black_feats_cnt(0),
+        white_feats_idx(32),
+        black_feats_idx(32) {}
+
+    void add_white_feat(int idx) {
+        white_feats_idx[white_feats_cnt++] = idx;
+    }
+    
+    void add_black_feat(int idx) {
+        black_feats_idx[black_feats_cnt++] = idx;
+    }
+
+    void reset(){
+        white_feats_cnt = 0;
+        black_feats_cnt = 0;
+    }
+};
+
+
 struct FeatureChanges {
     int add_white_count;
     int rem_white_count;
@@ -43,30 +70,12 @@ struct FeatureChanges {
     void rem_black_feat(int idx) {
         rem_black[rem_black_count++] = idx;
     }
-
-    void print() {
-        std::cout << "Add white features idx" << std::endl;
-        for (size_t i = 0; i < add_white_count; i++) {
-            std::cout << add_white[i] << ", ";
-        }
-        std::cout << "\nRem white features idx" << std::endl;
-        for (size_t i = 0; i < rem_white_count; i++) {
-            std::cout << rem_white[i] << ", ";
-        }
-        std::cout << "Add black features idx" << std::endl;
-        for (size_t i = 0; i < add_black_count; i++) {
-            std::cout << add_black[i] << ", ";
-        }
-        std::cout << "\nRem black features idx" << std::endl;
-        for (size_t i = 0; i < rem_black_count; i++) {
-            std::cout << rem_black[i] << ", ";
-        }
-    }
 };
 
 class FeatureExtractor {
 public:
     static std::pair<std::vector<int>, std::vector<int>> extractFeatures(const Board& board);
+    static void extractFeatures(const Board& board, StartingFeatures& initialFeatures);
     static std::pair<std::vector<int>, std::vector<int>> extractFeatures(const std::string& fen);
     static FeatureChanges moveDiffFeatures(const Board& board, int move);
 

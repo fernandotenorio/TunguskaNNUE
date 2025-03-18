@@ -27,6 +27,27 @@ std::pair<std::vector<int>, std::vector<int>> FeatureExtractor::extractFeatures(
     return { white_features, black_features };
 }
 
+void FeatureExtractor::extractFeatures(const Board& board, StartingFeatures& initialFeatures) {
+    for (int piece_type = Board::PAWN; piece_type <= Board::KING; piece_type += 2) {
+        for (int side = Board::WHITE; side <= Board::BLACK; side++) {
+            int piece = piece_type | side;
+            U64 bitboard = board.bitboards[piece];
+
+            int side_nnue = 1 - side;
+            int piece_type_nnue = (piece_type >> 1) - 1;
+
+            while (bitboard) {
+                int square = numberOfTrailingZeros(bitboard);
+                int white_index = side_nnue * 64 * 6 + piece_type_nnue * 64 + square;
+                int black_index = (1 - side_nnue) * 64 * 6 + piece_type_nnue * 64 + (square ^ 0b111000);               
+                initialFeatures.add_white_feat(white_index);
+                initialFeatures.add_black_feat(black_index);
+                bitboard &= bitboard - 1;
+            }
+        }
+    }
+}
+
 std::pair<std::vector<int>, std::vector<int>> FeatureExtractor::extractFeatures(const std::string& fen) {
     std::vector<int> white_features(INPUT_SIZE, 0);
     std::vector<int> black_features(INPUT_SIZE, 0);

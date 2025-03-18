@@ -28,6 +28,7 @@ public:
     float output_bias;                   // Final output bias
 
     bool weights_loaded;
+    StartingFeatures initialFeatures;   //avoid allocating vectors when position set in UCI: positions startpos moves ...
 
     NNUEAccumulator accumulator;         // Stores the current accumulator state
     Eigen::VectorXf combined_accumulator; // Now a member variable
@@ -51,6 +52,7 @@ public:
 
 
     void setAccumulator(NNUEAccumulator& new_acc, const std::vector<int>& active_features, Side stm);
+    void setAccumulator(NNUEAccumulator& new_acc, const std::vector<int>& active_idxs, int cnt, Side stm);
     void setAccumulator(const Board& board);
     void updateAccumulator(const FeatureChanges& changes);
     void updateAccumulatorUndo(const FeatureChanges& changes);

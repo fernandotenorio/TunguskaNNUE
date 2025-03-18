@@ -11,6 +11,7 @@ void NNUELoader::loadWeights(const std::string& filename) {
         return;
     }
     cnpy::npz_t npz = cnpy::npz_load(filename);
+    //std::cout << npz["accumulator.bias"].shape[0] << std::endl;
 
     using RowMajorMatrixXf = Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>;
     accumulator_weight = Eigen::Map<RowMajorMatrixXf>(npz["accumulator.weight"].data<float>(), HL_SIZE, INPUT_SIZE);
@@ -25,11 +26,11 @@ void NNUELoader::loadWeights(const std::string& filename) {
     weights_loaded = true;
 }
 
+//active_features is a INPUT_SIZE binary vector
 void NNUELoader::setAccumulator(NNUEAccumulator& new_acc, const std::vector<int>& active_features, Side stm) {
     // Initialize with bias
     Eigen::VectorXf acc = accumulator_bias;
 
-    // Extract active feature columns and sum their contributions efficiently
     for (size_t idx = 0; idx < active_features.size(); idx++) {
         if (active_features[idx]) {
             acc += accumulator_weight.col(idx);
@@ -38,10 +39,25 @@ void NNUELoader::setAccumulator(NNUEAccumulator& new_acc, const std::vector<int>
     std::memcpy(new_acc[stm], acc.data(), HL_SIZE * sizeof(float));
 }
 
+//active_idxs holds sequence of idxs
+void NNUELoader::setAccumulator(NNUEAccumulator& new_acc, const std::vector<int>& active_idxs, int cnt, Side stm) {
+    // Initialize with bias
+    Eigen::VectorXf acc = accumulator_bias;
+
+    for (size_t i = 0; i < cnt; i++) {
+        acc += accumulator_weight.col(active_idxs[i]);
+    }
+    std::memcpy(new_acc[stm], acc.data(), HL_SIZE * sizeof(float));
+}
+
 void NNUELoader::setAccumulator(const Board& board) {    
-    auto [white_features, black_features] = FeatureExtractor::extractFeatures(board);
-    this->setAccumulator(this->accumulator, white_features, WHITE_NNUE);
-    this->setAccumulator(this->accumulator, black_features, BLACK_NNUE);
+    //auto [white_features, black_features] = FeatureExtractor::extractFeatures(board);
+    initialFeatures.reset();
+    FeatureExtractor::extractFeatures(board, initialFeatures);
+    this->setAccumulator(this->accumulator, initialFeatures.white_feats_idx, initialFeatures.white_feats_cnt, WHITE_NNUE);
+    this->setAccumulator(this->accumulator, initialFeatures.black_feats_idx, initialFeatures.black_feats_cnt, BLACK_NNUE);
+    //this->setAccumulator(this->accumulator, white_features, WHITE_NNUE);
+    //this->setAccumulator(this->accumulator, black_features, BLACK_NNUE);
 }
 
 

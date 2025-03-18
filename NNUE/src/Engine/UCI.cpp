@@ -174,8 +174,8 @@ void UCI::inputPosition(std::string str){
 		input = input.substr(input.find("moves") + 6);
 		board.applyMoves(input);
 	}
-	board.print();
-	std::cout << board.toFEN() << std:: endl;
+	//board.print();
+	//std::cout << board.toFEN() << std:: endl;
 }
 
 
