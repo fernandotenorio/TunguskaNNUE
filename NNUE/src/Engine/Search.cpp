@@ -35,7 +35,7 @@ void Search::initHeuristics(){
 }
 
 Search::Search() : model(NNUELoader::getInstance()) {
-	model.loadWeights("D:\\cpp_projs\\NNUE\\NNUE\\weights\\weights_2_128.npz");
+	model.loadWeights("D:\\cpp_projs\\NNUE\\NNUE\\weights\\weights_12_128.npz");
 }
 
 void Search::refreshNNUE(){
@@ -309,7 +309,8 @@ int Search::alphaBeta(int alpha, int beta, int depth, bool doNull) {
 			if (score > ISMATE) score -= board.ply;
 			else if (score < -ISMATE) score += board.ply;
 
-			if (score >= beta) {		
+			if (score >= beta) {
+				//return beta;
 				info.nullCut++;
 				return score;
 			}
