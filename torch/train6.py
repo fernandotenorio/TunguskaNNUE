@@ -140,12 +140,12 @@ def train(model, db_path, rebuild, positions_folder, val_positions_folder, rebui
                       f"Loss: {avg_loss:.6f}, "
                       f"Elapsed: {elapsed_time:.2f}s, ETA: {eta:.2f}s")
 
-        val_loss = validate(model, val_dataloader, criterion)
-        print(f"Epoch {epoch + 1}/{epochs}, Validation Loss: {val_loss:.6f}")
-
         checkpoint_path = os.path.join(CHECKPOINT_DIR, f"model_epoch_{epoch + 1}.pth")
         model.save(checkpoint_path)
         print(f"Checkpoint saved to {checkpoint_path}")
+
+        val_loss = validate(model, val_dataloader, criterion)
+        print(f"Epoch {epoch + 1}/{epochs}, Validation Loss: {val_loss:.6f}")
 
         if val_loss < best_val_loss:
             best_val_loss = val_loss
@@ -157,10 +157,10 @@ if __name__ == '__main__':
     model = NNUE().to(DEVICE)
 
     LEARNING_RATE = 0.001
-    BATCH_SIZE = 4096 * 4
+    BATCH_SIZE = 4096 * 2
     EPOCHS = 100
-    CHECKPOINT_DIR = "checkpoints-hl-256"
-    PROGRESS_INTERVAL = 10 # every n batches
+    CHECKPOINT_DIR = "checkpoints-hl-64"
+    PROGRESS_INTERVAL = 100
     DB_PATH = "positions.db"
     POS_FOLDER = "positions_train"
     VAL_FOLDER = "positions_val"

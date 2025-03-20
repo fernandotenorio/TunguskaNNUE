@@ -62,4 +62,6 @@ def extract_to_csv(file_path, output_csv):
 # Stockfish convert tool
 # Stockfish_Build.exe convert test80-2024-01-jan-2tb7p.min-v2.v6.binpack positions01-jan.plain validate
 if __name__ == '__main__':
-    extract_to_csv("../raw_data/positions03-mar.plain", "../raw_data/positions03-mar.csv")
+    extract_to_csv("pos_plain/test80-2024-04-apr-2tb7p.min-v2.plain", "pos_plain/test80-2024-04-apr-2tb7p.min-v2.csv")
+    extract_to_csv("pos_plain/test80-2024-05-may-2tb7p.min-v2.v6.plain", "pos_plain/test80-2024-05-may-2tb7p.min-v2.v6.csv")
+    extract_to_csv("pos_plain/test80-2024-06-jun-2tb7p.min-v2.v6.plain", "pos_plain/test80-2024-06-jun-2tb7p.min-v2.v6.csv")

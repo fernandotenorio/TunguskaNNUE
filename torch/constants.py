@@ -1,7 +1,7 @@
 import torch
 
 INPUT_SIZE = 768
-HL_SIZE = 256
+HL_SIZE = 64
 SCALE = 400
 QA = 255
 QB = 64

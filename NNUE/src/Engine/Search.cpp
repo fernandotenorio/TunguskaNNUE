@@ -35,7 +35,7 @@ void Search::initHeuristics(){
 }
 
 Search::Search() : model(NNUELoader::getInstance()) {
-	model.loadWeights("D:\\cpp_projs\\NNUE\\NNUE\\weights\\weights_12_128.npz");
+	model.loadWeights("D:\\cpp_projs\\NNUE\\NNUE\\weights\\weights_256_e3_new.npz");
 }
 
 void Search::refreshNNUE(){

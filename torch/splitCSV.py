@@ -46,4 +46,6 @@ def split_csv(file_path, n_parts, has_header, output_dir):
 
 
 if __name__ == '__main__':
-    split_csv("../raw_data/data_d9_2021_09_02.csv", 10, True, "../raw_data/data-d9-parts")
+    split_csv("pos_plain/test80-2024-04-apr-2tb7p.min-v2.csv", 10, True, "positions_train/test80-2024-04-apr-2tb7p.min-v2-parts")
+    split_csv("pos_plain/test80-2024-05-may-2tb7p.min-v2.v6.csv", 10, True, "positions_train/test80-2024-05-may-2tb7p.min-v2.v6-parts")
+    split_csv("pos_plain/test80-2024-06-jun-2tb7p.min-v2.v6.csv", 10, True, "positions_train/test80-2024-06-jun-2tb7p.min-v2.v6-parts")
